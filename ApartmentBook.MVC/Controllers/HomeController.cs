@@ -15,6 +15,7 @@ namespace ApartmentBook.MVC.Controllers
 
         public IActionResult Index()
         {
+            ViewData["Name"] = "Pale moje jointy";
             return View();
         }
 

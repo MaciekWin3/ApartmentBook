@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-ApartmentBook.MVC-2ABDDE8A-66F2-459E-AF64-94B6C4C29FD1</UserSecretsId>
   </PropertyGroup>
@@ -13,6 +13,17 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Apartments\Services\" />
+    <Folder Include="Features\Apartments\Repositories\" />
+    <Folder Include="Features\Apartments\Views\" />
+    <Folder Include="Features\Payments\Services\" />
+    <Folder Include="Features\Payments\Repositories\" />
+    <Folder Include="Features\Tenants\Services\" />
+    <Folder Include="Features\Tenants\Repositories\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>
