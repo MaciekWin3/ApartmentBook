@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace ApartmentBook.Data.Migrations
+namespace ApartmentBook.MVC.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
