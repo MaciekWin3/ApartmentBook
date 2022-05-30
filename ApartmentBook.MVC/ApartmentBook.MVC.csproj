@@ -8,21 +8,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Tenants\**" />
+    <Content Remove="Features\Tenants\**" />
+    <EmbeddedResource Remove="Features\Tenants\**" />
+    <None Remove="Features\Tenants\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Serilog" Version="2.11.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Apartments\Services\" />
-    <Folder Include="Features\Apartments\Repositories\" />
-    <Folder Include="Features\Apartments\Views\" />
-    <Folder Include="Features\Payments\Services\" />
-    <Folder Include="Features\Payments\Repositories\" />
-    <Folder Include="Features\Tenants\Services\" />
-    <Folder Include="Features\Tenants\Repositories\" />
     <Folder Include="Utils\" />
   </ItemGroup>
 

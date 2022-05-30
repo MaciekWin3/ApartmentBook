@@ -1,6 +1,13 @@
 using ApartmentBook.MVC.Data;
-using Microsoft.AspNetCore.Identity;
+using ApartmentBook.MVC.Features.Apartments.Repositories;
+using ApartmentBook.MVC.Features.Apartments.Services;
+using ApartmentBook.MVC.Features.Auth.Models;
+using ApartmentBook.MVC.Features.Payments.Repositories;
+using ApartmentBook.MVC.Features.Payments.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
+using ILogger = Serilog.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +17,27 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// Logger
+builder.Logging.ClearProviders();
+ILogger logger = new LoggerConfiguration()
+    .WriteTo.Console(theme: AnsiConsoleTheme.Literate)
+    .CreateLogger();
+
+builder.Logging.AddSerilog(logger);
+builder.Services.AddSingleton(logger);
+
+// Repositories
+builder.Services.AddTransient<IApartmentRepository, ApartmentRepository>();
+builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
+
+// Services
+builder.Services.AddTransient<IApartmentService, ApartmentService>();
+builder.Services.AddTransient<IPaymentService, PaymentService>();
+
 
 var app = builder.Build();
 

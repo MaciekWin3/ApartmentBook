@@ -1,32 +1,32 @@
-﻿using ApartmentBook.MVC.Features.Apartments.Models;
-using ApartmentBook.MVC.Features.Apartments.Services;
-using ApartmentBook.MVC.Features.Auth.Models;
+﻿using ApartmentBook.MVC.Features.Auth.Models;
+using ApartmentBook.MVC.Features.Payments.Models;
+using ApartmentBook.MVC.Features.Payments.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApartmentBook.MVC.Features.Apartments.Controllers
+namespace ApartmentBook.MVC.Features.Payments.Controllers
 {
-    public class ApartmentsController : Controller
+    public class PaymentsController : Controller
     {
-        private readonly IApartmentService apartmentService;
+        private readonly IPaymentService paymentService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ApartmentsController(IApartmentService apartmentService, UserManager<ApplicationUser> userManager)
+        public PaymentsController(IPaymentService paymentService, UserManager<ApplicationUser> userManager)
         {
-            this.apartmentService = apartmentService;
+            this.paymentService = paymentService;
             this.userManager = userManager;
         }
 
-        // GET: Apartment
+        // GET: Payments
         public async Task<IActionResult> Index()
         {
             var user = await GetUser();
-            var apartments = await apartmentService.GetUsersApartments(user.Id);
-            return View(apartments);
+            var payments = await paymentService.GetUsersPayments(user.Id);
+            return View(payments);
         }
 
-        // GET: Apartment/Details/5
+        // GET: Payments/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id is null)
@@ -34,39 +34,39 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
                 return NotFound();
             }
 
-            var apartment = await apartmentService.GetAsync(id);
-            if (apartment is null)
+            var payment = await paymentService.GetAsync(id);
+            if (payment is null)
             {
                 return NotFound();
             }
 
-            return View(apartment);
+            return View(payment);
         }
 
-        // GET: Apartment/Create
+        // GET: Payments/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Apartment/Create
+        // POST: Payments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Street,Building,Flat,Rent")] Apartment apartment)
+        public async Task<IActionResult> Create([Bind("Id,Type,Amount,AmountPaid")] Payment payment)
         {
             if (ModelState.IsValid)
             {
-                apartment.Id = Guid.NewGuid();
-                apartment.User = await GetUser();
-                await apartmentService.CreateAsync(apartment);
+                payment.Id = Guid.NewGuid();
+                //payment.Apartment = 
+                await paymentService.CreateAsync(payment);
                 return RedirectToAction(nameof(Index));
             }
-            return View(apartment);
+            return View(payment);
         }
 
-        // GET: Apartment/Edit/5
+        // GET: Payments/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id is null)
@@ -74,22 +74,22 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
                 return NotFound();
             }
 
-            var apartment = await apartmentService.GetAsync(id);
-            if (apartment is null)
+            var payment = await paymentService.GetAsync(id);
+            if (payment is null)
             {
                 return NotFound();
             }
-            return View(apartment);
+            return View(payment);
         }
 
-        // POST: Apartment/Edit/5
+        // POST: Payments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Street,Building,Flat,Rent")] Apartment apartment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Type,Amount,AmountPaid")] Payment payment)
         {
-            if (id != apartment.Id)
+            if (id != payment.Id)
             {
                 return NotFound();
             }
@@ -98,11 +98,11 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             {
                 try
                 {
-                    await apartmentService.UpdateAsync(apartment);
+                    await paymentService.UpdateAsync(payment);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await apartmentService.GetAsync(id) is null)
+                    if (await paymentService.GetAsync(id) is null)
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(apartment);
+            return View(payment);
         }
 
-        // GET: Apartment/Delete/5
+        // GET: Payments/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id is null)
@@ -124,25 +124,25 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
                 return NotFound();
             }
 
-            var apartment = await apartmentService.GetAsync(id);
+            var payment = await paymentService.GetAsync(id);
 
-            if (apartment == null)
+            if (payment == null)
             {
                 return NotFound();
             }
 
-            return View(apartment);
+            return View(payment);
         }
 
-        // POST: Apartment/Delete/5
+        // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var apartment = await apartmentService.GetAsync(id);
-            if (apartment is not null)
+            var payment = await paymentService.GetAsync(id);
+            if (payment is not null)
             {
-                await apartmentService.DeleteAsync(apartment.Id);
+                await paymentService.DeleteAsync(payment.Id);
             }
 
             return RedirectToAction(nameof(Index));

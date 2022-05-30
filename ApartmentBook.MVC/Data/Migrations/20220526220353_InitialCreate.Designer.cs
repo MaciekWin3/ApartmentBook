@@ -4,6 +4,7 @@ using ApartmentBook.MVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApartmentBook.MVC.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220526220353_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,14 +144,14 @@ namespace ApartmentBook.MVC.Data.Migrations
                     b.Property<decimal>("AmountPaid")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("ApartmentId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTimeOffset>("CreationDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset>("LastModificationDate")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -157,9 +159,44 @@ namespace ApartmentBook.MVC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApartmentId");
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Payments", (string)null);
+                });
+
+            modelBuilder.Entity("ApartmentBook.MVC.Features.Tenants.Models.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApartmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastModificationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApartmentId")
+                        .IsUnique();
+
+                    b.ToTable("Tenant", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -346,9 +383,20 @@ namespace ApartmentBook.MVC.Data.Migrations
 
             modelBuilder.Entity("ApartmentBook.MVC.Features.Payments.Models.Payment", b =>
                 {
-                    b.HasOne("ApartmentBook.MVC.Features.Apartments.Models.Apartment", "Apartment")
+                    b.HasOne("ApartmentBook.MVC.Features.Tenants.Models.Tenant", "Tenant")
                         .WithMany("Payments")
-                        .HasForeignKey("ApartmentId");
+                        .HasForeignKey("TenantId");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("ApartmentBook.MVC.Features.Tenants.Models.Tenant", b =>
+                {
+                    b.HasOne("ApartmentBook.MVC.Features.Apartments.Models.Apartment", "Apartment")
+                        .WithOne("Tenant")
+                        .HasForeignKey("ApartmentBook.MVC.Features.Tenants.Models.Tenant", "ApartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Apartment");
                 });
@@ -406,12 +454,17 @@ namespace ApartmentBook.MVC.Data.Migrations
 
             modelBuilder.Entity("ApartmentBook.MVC.Features.Apartments.Models.Apartment", b =>
                 {
-                    b.Navigation("Payments");
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("ApartmentBook.MVC.Features.Auth.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Apartments");
+                });
+
+            modelBuilder.Entity("ApartmentBook.MVC.Features.Tenants.Models.Tenant", b =>
+                {
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

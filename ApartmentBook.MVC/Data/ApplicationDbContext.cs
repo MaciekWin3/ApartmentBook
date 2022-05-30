@@ -1,9 +1,9 @@
 ﻿using ApartmentBook.MVC.Features.Apartments.Models;
 using ApartmentBook.MVC.Features.Auth.Models;
 using ApartmentBook.MVC.Features.Payments.Models;
-using ApartmentBook.MVC.Features.Tenants.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ApartmentBook.MVC.Data
 {
@@ -17,7 +17,6 @@ namespace ApartmentBook.MVC.Data
         public override DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Apartment> Apartments { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<Tenant> MyProperty { get; set; }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
@@ -64,7 +63,6 @@ namespace ApartmentBook.MVC.Data
             BuildModelForApplicationUsers(modelBuilder);
             BuildModelForApartments(modelBuilder);
             BuildModelForPayment(modelBuilder);
-            BuildModelForTenant(modelBuilder);
         }
 
         private static void BuildModelForApplicationUsers(ModelBuilder modelBuilder)
@@ -85,8 +83,8 @@ namespace ApartmentBook.MVC.Data
                 .HasKey(a => new { a.Id });
 
             modelBuilder.Entity<Apartment>()
-                .HasOne(a => a.Tenant)
-                .WithOne(t => t.Apartment);
+                .HasMany(a => a.Payments)
+                .WithOne(p => p.Apartment);
         }
 
         private static void BuildModelForPayment(ModelBuilder modelBuilder)
@@ -96,19 +94,12 @@ namespace ApartmentBook.MVC.Data
                 .HasKey(a => new { a.Id });
 
             modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Tenant)
-                .WithMany(t => t.Payments);
-        }
+                .HasOne(p => p.Apartment)
+                .WithMany(a => a.Payments);
 
-        private static void BuildModelForTenant(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Tenant>()
-                .ToTable("Tenant")
-                .HasKey(t => new { t.Id });
-
-            modelBuilder.Entity<Tenant>()
-                .HasMany(t => t.Payments)
-                .WithOne(p => p.Tenant);
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Type)
+                .HasConversion(new EnumToStringConverter<PaymentType>());
         }
     }
 }
