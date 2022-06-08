@@ -74,6 +74,10 @@ namespace ApartmentBook.MVC.Data
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Apartments)
                 .WithOne(a => a.User);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Payments)
+                .WithOne(a => a.User);
         }
 
         private static void BuildModelForApartments(ModelBuilder modelBuilder)
@@ -96,6 +100,10 @@ namespace ApartmentBook.MVC.Data
             modelBuilder.Entity<Payment>()
                 .HasOne(p => p.Apartment)
                 .WithMany(a => a.Payments);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Payments);
 
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Type)

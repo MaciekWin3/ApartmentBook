@@ -1,4 +1,5 @@
 ﻿using ApartmentBook.MVC.Features.Apartments.Models;
+using ApartmentBook.MVC.Features.Auth.Models;
 
 namespace ApartmentBook.MVC.Features.Payments.Models
 {
@@ -10,7 +11,6 @@ namespace ApartmentBook.MVC.Features.Payments.Models
         public decimal AmountPaid { get; set; }
         public bool IsPaid { get { return AmountPaid > Amount; } }
         public virtual Apartment Apartment { get; set; }
-
-        //public List<Attat> { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

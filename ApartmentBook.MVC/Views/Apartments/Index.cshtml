@@ -4,56 +4,63 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="text-center">
+    <h1>Apartments</h1>
+    <p>
+        <a asp-action="Create" class="btn btn-success">Create New</a>
+    </p>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Street)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Building)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Flat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rent)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Street)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Building)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Flat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rent)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+
+
+<div class="row">
+    @foreach(var apartment in Model)
+    {
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="ms-3">
+                            <p class="fw-bold mb-1">@apartment.Name</p>
+                            <p class="text-muted mb-0">Addres: Gdynia, @apartment.Street @apartment.Building/@apartment.Flat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer border-0 bg-light p-2 d-flex justify-content-around">
+            <a         
+                asp-action="Details" asp-route-id="@apartment.Id"
+                class="btn btn-link m-0 text-reset"
+                role="button"
+                data-ripple-color="primary"
+                >Info<i class="fas fa-circle-info ms-2"></i>
+            </a>
+            <a
+                asp-action="Edit" asp-route-id="@apartment.Id"
+                class="btn btn-link m-0 text-reset"
+                role="button"
+                data-ripple-color="primary"
+                >Edit<i class="fas fa-pen-to-square ms-2"></i>
+            </a>
+            <a
+                asp-action="Delete" asp-route-id="@apartment.Id"
+                class="btn btn-link m-0 text-reset"
+                role="button"
+                data-ripple-color="primary"
+                >Delete<i class="fas fa-trash-can ms-2"></i>
+            </a>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<script>
+
+</script>
+
+<style>
+
+</style>

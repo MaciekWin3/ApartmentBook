@@ -4,45 +4,117 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Model.Name</h1>
 
-<div>
-    <h4>Apartment</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Street)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Street)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Building)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Building)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Flat)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Flat)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rent)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rent)
-        </dd>
-    </dl>
+
+<hr />
+<div class="row my-2">
+    <div class="col">
+        <div class="card col-xl-12 col-sm-12 mb-xl-0 mb-4">
+            <ol class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Address</div>
+                    Gdynia @Model.Street/@Model.Building @Model.Flat | 81-208
+                </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Value & Metrage</div>
+                    @Model.Value PLN | @Model.Meterage m
+                </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Rent</div>
+                    @Model.Rent zł
+                </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Tenant</div>
+                    Maciek Winnik
+                </div>
+                </li>
+                <li class="list-group-item text-center justify-content-evenly">
+                <div class="ms-2 me-auto">
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Create payment</a>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+                    <a class="btn btn-primary" asp-action="Index">Back to List</a>
+                </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card col-xl-12 col-sm-12 mb-xl-0 mb-4">
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
-    <a class="btn btn-primary" asp-action="Index">Back to List</a>
+<div class="card col-xl-12 col-sm-12 mb-xl-0 mb-4">
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>twitter</td>
+    </tr>
+  </tbody>
+</table>
 </div>
+
+
+<script>
+  const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'My First dataset',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0, 10, 5, 2, 20, 30, 45],
+    }]
+  };
+
+  const config = {
+    type: 'line',
+    data: data,
+    options: {}
+  };
+
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+</script>

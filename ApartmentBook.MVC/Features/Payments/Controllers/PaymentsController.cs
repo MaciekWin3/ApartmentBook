@@ -59,7 +59,8 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
             if (ModelState.IsValid)
             {
                 payment.Id = Guid.NewGuid();
-                //payment.Apartment = 
+                // Checking for apartment
+                payment.User = await GetUser();
                 await paymentService.CreateAsync(payment);
                 return RedirectToAction(nameof(Index));
             }
