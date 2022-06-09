@@ -1,21 +1,30 @@
-﻿using ApartmentBook.MVC.Features.Auth.Models;
+﻿using ApartmentBook.MVC.Features.Apartments.Models;
+using ApartmentBook.MVC.Features.Apartments.Services;
+using ApartmentBook.MVC.Features.Auth.Models;
 using ApartmentBook.MVC.Features.Payments.Models;
 using ApartmentBook.MVC.Features.Payments.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ApartmentBook.MVC.Features.Payments.Controllers
 {
     public class PaymentsController : Controller
     {
         private readonly IPaymentService paymentService;
+        private readonly IApartmentService apartmentService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IMapper mapper;
 
-        public PaymentsController(IPaymentService paymentService, UserManager<ApplicationUser> userManager)
+        public PaymentsController(IPaymentService paymentService, IApartmentService apartmentService,
+            UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             this.paymentService = paymentService;
+            this.apartmentService = apartmentService;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         // GET: Payments
@@ -44,8 +53,12 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         }
 
         // GET: Payments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var apartment = JsonConvert.DeserializeObject<Apartment>(TempData["Apartament"].ToString());
+            TempData.Keep("Apartament");
+            // Mapping obiektu do dto i w view przesłanie go :)
+            ViewData["Apartment"] = apartment;
             return View();
         }
 

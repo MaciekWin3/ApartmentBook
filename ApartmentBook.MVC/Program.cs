@@ -30,6 +30,9 @@ ILogger logger = new LoggerConfiguration()
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton(logger);
 
+// Automapper
+builder.Services.AddAutoMapper(typeof(Program));
+
 // Repositories
 builder.Services.AddTransient<IApartmentRepository, ApartmentRepository>();
 builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
@@ -37,7 +40,6 @@ builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
 // Services
 builder.Services.AddTransient<IApartmentService, ApartmentService>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
-
 
 var app = builder.Build();
 

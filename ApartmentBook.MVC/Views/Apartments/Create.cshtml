@@ -1,4 +1,4 @@
-﻿ @model ApartmentBook.MVC.Features.Apartments.Models.Apartment
+﻿ @model ApartmentBook.MVC.Features.Apartments.DTOs.ApartamentForCreateDTO
 
 @{
     ViewData["Title"] = "Create";
@@ -31,6 +31,21 @@
                 <label asp-for="Flat" class="control-label"></label>
                 <input asp-for="Flat" class="form-control" />
                 <span asp-validation-for="Flat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostCode" class="control-label"></label>
+                <input asp-for="PostCode" class="form-control" />
+                <span asp-validation-for="PostCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Meterage" class="control-label"></label>
+                <input asp-for="Meterage" class="form-control" />
+                <span asp-validation-for="Meterage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Rent" class="control-label"></label>

@@ -38,7 +38,7 @@
                 </li>
                 <li class="list-group-item text-center justify-content-evenly">
                 <div class="ms-2 me-auto">
-                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Create payment</a>
+                    <a class="btn btn-primary" asp-action="RedirectToCreatePayment" asp-route-id="@Model?.Id">Create payment</a>
                     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
                     <a class="btn btn-primary" asp-action="Index">Back to List</a>
                 </div>
@@ -118,3 +118,7 @@
     config
   );
 </script>
+
+<style>
+
+</style>

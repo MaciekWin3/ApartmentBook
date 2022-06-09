@@ -1,9 +1,11 @@
 ﻿using ApartmentBook.MVC.Features.Apartments.Models;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ApartmentBook.MVC.Features.Apartments.Controllers
 {
@@ -11,11 +13,14 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
     {
         private readonly IApartmentService apartmentService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IMapper mapper;
 
-        public ApartmentsController(IApartmentService apartmentService, UserManager<ApplicationUser> userManager)
+        public ApartmentsController(IApartmentService apartmentService, UserManager<ApplicationUser> userManager,
+            IMapper mapper)
         {
             this.apartmentService = apartmentService;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         // GET: Apartment
@@ -146,6 +151,14 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> RedirectToCreatePayment(Guid id)
+        {
+            TempData["Apartament"] = JsonConvert.SerializeObject(await apartmentService.GetAsync(id));
+            TempData.Keep("Apartament");
+            return RedirectToAction($"Create", "Payments");
+            //return Redirect($"./Payments/Create/{id}");
         }
 
         private async Task<ApplicationUser> GetUser()

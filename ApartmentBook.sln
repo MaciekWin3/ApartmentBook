@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApartmentBook.MVC", "ApartmentBook.MVC\ApartmentBook.MVC.csproj", "{4768A9B6-3B6A-49C4-B635-702B8FFEF05A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApartmentBook.RecurringJobs", "ApartmentBook.RecurringJobs\ApartmentBook.RecurringJobs.csproj", "{BE55F698-0EC6-41E3-99C8-93D15585E077}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApartmentBook.RecurringJobs", "ApartmentBook.RecurringJobs\ApartmentBook.RecurringJobs.csproj", "{BE55F698-0EC6-41E3-99C8-93D15585E077}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApartmentBook.MVC.Tests", "ApartmentBook.MVC.Tests\ApartmentBook.MVC.Tests.csproj", "{9B0F3AF1-1B2E-4AC9-AD9F-ADC2C0E26785}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{BE55F698-0EC6-41E3-99C8-93D15585E077}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE55F698-0EC6-41E3-99C8-93D15585E077}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE55F698-0EC6-41E3-99C8-93D15585E077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B0F3AF1-1B2E-4AC9-AD9F-ADC2C0E26785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B0F3AF1-1B2E-4AC9-AD9F-ADC2C0E26785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B0F3AF1-1B2E-4AC9-AD9F-ADC2C0E26785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B0F3AF1-1B2E-4AC9-AD9F-ADC2C0E26785}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
