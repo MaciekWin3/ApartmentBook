@@ -35,15 +35,15 @@ namespace ApartmentBook.MVC.Data
             ChangeTracker.DetectChanges();
 
             ChangeTracker.Entries()
-                .Where(e => e.Metadata.FindProperty("CreationDate") != null && e.Metadata.FindProperty("LastModificationDate") != null)
+                .Where(e => e.Entity is BaseModel && (e.State == EntityState.Added || e.State == EntityState.Modified))
                 .ToList()
                 .ForEach(e =>
                 {
-                    e.Property("LastModificationDate").CurrentValue = DateTimeOffset.UtcNow;
+                    ((BaseModel)e.Entity).UpdatedDate = DateTime.Now;
 
                     if (e.State == EntityState.Added)
                     {
-                        e.Property("CreationDate").CurrentValue = DateTimeOffset.UtcNow;
+                        ((BaseModel)e.Entity).CreatedDate = DateTime.Now;
                     }
                 });
         }
@@ -54,11 +54,6 @@ namespace ApartmentBook.MVC.Data
                 .Where(x => x.ClrType.Name != "IdentityUser")
                 .ToList();
 
-            entities.ForEach(entity =>
-            {
-                entity.AddProperty("CreationDate", typeof(DateTimeOffset));
-                entity.AddProperty("LastModificationDate", typeof(DateTimeOffset));
-            });
             base.OnModelCreating(modelBuilder);
             BuildModelForApplicationUsers(modelBuilder);
             BuildModelForApartments(modelBuilder);

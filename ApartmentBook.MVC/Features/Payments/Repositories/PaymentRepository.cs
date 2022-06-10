@@ -12,7 +12,9 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
 
         public async Task<Payment> GetAsync(Guid? id)
         {
-            return await context.Payments.FirstOrDefaultAsync(p => p.Id == id);
+            return await context.Payments
+                .Include(p => p.Apartment)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<List<Payment>> GetApartmentPayments(Guid apartmentId)
@@ -21,6 +23,7 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
                 .Where(p => p.Apartment.Id == apartmentId)
                 .ToListAsync();
         }
+
         public async Task<List<Payment>> GetUsersPayments(string userId)
         {
             return await context.Payments

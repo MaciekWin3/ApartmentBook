@@ -1,10 +1,11 @@
-﻿using ApartmentBook.MVC.Features.Auth.Models;
+﻿using ApartmentBook.MVC.Data;
+using ApartmentBook.MVC.Features.Auth.Models;
 using ApartmentBook.MVC.Features.Payments.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApartmentBook.MVC.Features.Apartments.Models
 {
-    public class Apartment
+    public class Apartment : BaseModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -17,6 +18,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Models
 
         [DataType(DataType.Currency)]
         public decimal Rent { get; set; }
+
         public virtual ApplicationUser User { get; set; }
         public virtual IList<Payment> Payments { get; set; }
         //public IList<string> Notes { get; set; }

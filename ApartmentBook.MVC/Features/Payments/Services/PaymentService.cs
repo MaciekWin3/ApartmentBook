@@ -8,6 +8,7 @@ namespace ApartmentBook.MVC.Features.Payments.Services
     {
         private readonly IPaymentRepository paymentRepository;
         private readonly IApartmentService apartmentService;
+
         public PaymentService(IPaymentRepository paymentRepository, IApartmentService apartmentService)
         {
             this.paymentRepository = paymentRepository;
@@ -48,9 +49,17 @@ namespace ApartmentBook.MVC.Features.Payments.Services
             await paymentRepository.CreateAsync(payment);
         }
 
+        public async Task<Guid> PayPaymentAndReturnApartmentId(Guid id)
+        {
+            var payment = await paymentRepository.GetAsync(id);
+            var apartment = await apartmentService.GetAsync(payment.Apartment.Id);
+            payment.AmountPaid = payment.Amount;
+            await paymentRepository.UpdateAsync(payment);
+            return apartment.Id;
+        }
+
         public async Task CreateReccuringPayments()
         {
-            var apartametsIds = 2;
             //await paymentRepository.
         }
     }

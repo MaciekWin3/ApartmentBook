@@ -1,27 +1,22 @@
 ﻿@using ApartmentBook.MVC.Features.Payments.Models
-@using ApartmentBook.MVC.Features.Apartments.Models
-@model ApartmentBook.MVC.Features.Payments.Models.Payment
+@model ApartmentBook.MVC.Features.Payments.DTOs.PaymentForCreateDTO
 
 @{
     ViewData["Title"] = "Create";
-    Model.Apartment = ViewData["Apartment"] as Apartment;
 }
 
-<h1>Create</h1>
-<p>@Model.Apartment.Id</p>
-<p>@Model.Apartment.Name</p>
+<h1>Create payment</h1>
 
-<h4>Payment</h4>
+<h4>@Model.ApartmentName</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <div class="form-group">
-            <label asp-for="Amount" class="control-label"></label>
-            <input asp-for="Amount" class="form-control" value="@Model.Apartment.Name" disabled />
-            <span asp-validation-for="Amount" class="text-danger"></span>
-        </div>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ApartmentId" class="control-label"></label>
+                <input asp-for="ApartmentId" class="form-control" value="@Model.ApartmentId" disabled>
+            </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
                 <select asp-for="Type" class="form-control">

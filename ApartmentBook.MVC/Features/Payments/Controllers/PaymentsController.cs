@@ -1,6 +1,7 @@
 ﻿using ApartmentBook.MVC.Features.Apartments.Models;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
+using ApartmentBook.MVC.Features.Payments.DTOs;
 using ApartmentBook.MVC.Features.Payments.Models;
 using ApartmentBook.MVC.Features.Payments.Services;
 using AutoMapper;
@@ -53,13 +54,17 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         }
 
         // GET: Payments/Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             var apartment = JsonConvert.DeserializeObject<Apartment>(TempData["Apartament"].ToString());
             TempData.Keep("Apartament");
-            // Mapping obiektu do dto i w view przesłanie go :)
-            ViewData["Apartment"] = apartment;
-            return View();
+            var paymentForCreateDTO = new PaymentForCreateDTO
+            {
+                ApartmentId = apartment.Id,
+                ApartmentName = apartment.Name
+            };
+            TempData["ID"] = apartment.Id;
+            return View(paymentForCreateDTO);
         }
 
         // POST: Payments/Create
@@ -67,15 +72,18 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Amount,AmountPaid")] Payment payment)
+        public async Task<IActionResult> Create([FromForm] PaymentForCreateDTO paymentForCreateDTO)
         {
+            var apartmentId = Guid.Parse(TempData["ID"].ToString());
+            Payment payment = new();
             if (ModelState.IsValid)
             {
+                payment = mapper.Map<PaymentForCreateDTO, Payment>(paymentForCreateDTO);
                 payment.Id = Guid.NewGuid();
-                // Checking for apartment
                 payment.User = await GetUser();
+                payment.Apartment = await apartmentService.GetAsync(apartmentId);
                 await paymentService.CreateAsync(payment);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Apartments", new { id = apartmentId });
             }
             return View(payment);
         }
@@ -160,6 +168,12 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> PayPayment(Guid id)
+        {
+            var apartmentId = await paymentService.PayPaymentAndReturnApartmentId(id);
+            return RedirectToAction("Details", "Apartments", new { id = apartmentId });
         }
 
         private async Task<ApplicationUser> GetUser()

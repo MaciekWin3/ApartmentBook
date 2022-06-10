@@ -4,9 +4,11 @@ using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
 using ApartmentBook.MVC.Features.Payments.Repositories;
 using ApartmentBook.MVC.Features.Payments.Services;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using System.Globalization;
 using ILogger = Serilog.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +44,19 @@ builder.Services.AddTransient<IApartmentService, ApartmentService>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
 
 var app = builder.Build();
+
+var supportedCultures = new[]
+{
+    new CultureInfo("en-US"),
+    new CultureInfo("en")
+};
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en-US"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

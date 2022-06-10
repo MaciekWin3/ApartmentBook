@@ -1,6 +1,8 @@
-﻿using ApartmentBook.MVC.Features.Apartments.Models;
+﻿using ApartmentBook.MVC.Features.Apartments.DTOs;
+using ApartmentBook.MVC.Features.Apartments.Models;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
+using ApartmentBook.MVC.Features.Payments.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +14,15 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
     public class ApartmentsController : Controller
     {
         private readonly IApartmentService apartmentService;
+        private readonly IPaymentService paymentService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMapper mapper;
 
-        public ApartmentsController(IApartmentService apartmentService, UserManager<ApplicationUser> userManager,
-            IMapper mapper)
+        public ApartmentsController(IApartmentService apartmentService, IPaymentService paymentService,
+            UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             this.apartmentService = apartmentService;
+            this.paymentService = paymentService;
             this.userManager = userManager;
             this.mapper = mapper;
         }
@@ -40,6 +44,8 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             }
 
             var apartment = await apartmentService.GetAsync(id);
+            var payments = await paymentService.GetApartmentsPayments((Guid)id);
+            ViewData["Payments"] = payments;
             if (apartment is null)
             {
                 return NotFound();
@@ -59,10 +65,12 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Street,Building,Flat,Rent")] Apartment apartment)
+        public async Task<IActionResult> Create([Bind("Id,Name,Street,Building,Flat,Rent")] ApartmentForCreateDTO apartamentForCreateDTO)
         {
+            Apartment apartment = new();
             if (ModelState.IsValid)
             {
+                apartment = mapper.Map<ApartmentForCreateDTO, Apartment>(apartamentForCreateDTO);
                 apartment.Id = Guid.NewGuid();
                 apartment.User = await GetUser();
                 await apartmentService.CreateAsync(apartment);
@@ -157,8 +165,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         {
             TempData["Apartament"] = JsonConvert.SerializeObject(await apartmentService.GetAsync(id));
             TempData.Keep("Apartament");
-            return RedirectToAction($"Create", "Payments");
-            //return Redirect($"./Payments/Create/{id}");
+            return RedirectToAction("Create", "Payments");
         }
 
         private async Task<ApplicationUser> GetUser()

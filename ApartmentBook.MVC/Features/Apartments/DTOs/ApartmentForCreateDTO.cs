@@ -2,14 +2,14 @@
 
 namespace ApartmentBook.MVC.Features.Apartments.DTOs
 {
-    public class ApartamentForCreateDTO
+    public class ApartmentForCreateDTO
     {
         public string Name { get; set; }
         public string Street { get; set; }
         public string Building { get; set; }
         public string Flat { get; set; }
         public string PostCode { get; set; }
-        public int Meterage { get; set; }       
+        public int Meterage { get; set; }
         public decimal Value { get; set; }
 
         [DataType(DataType.Currency)]
