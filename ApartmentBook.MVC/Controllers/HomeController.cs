@@ -37,6 +37,7 @@ namespace ApartmentBook.MVC.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
+
     public class LineChartData
     {
         public DateTime xValue;
@@ -48,6 +49,7 @@ namespace ApartmentBook.MVC.Controllers
     {
         public List<ChartFields> ChartData { get; set; }
     }
+
     public class ChartFields
     {
         public string EmployeeName { get; set; }

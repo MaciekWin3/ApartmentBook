@@ -2,10 +2,13 @@ using ApartmentBook.MVC.Data;
 using ApartmentBook.MVC.Features.Apartments.Repositories;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
+using ApartmentBook.MVC.Features.Emails;
 using ApartmentBook.MVC.Features.Payments.Repositories;
 using ApartmentBook.MVC.Features.Payments.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Globalization;
@@ -42,6 +45,20 @@ builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
 // Services
 builder.Services.AddTransient<IApartmentService, ApartmentService>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
+
+// SendGrid
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+var sendGridKey = builder.Configuration["SendGrid:Key"];
+
+builder.Services.AddSendGrid(options =>
+{
+    options.ApiKey = sendGridKey;
+});
+
+builder.Services
+    .AddFluentEmail(builder.Configuration["SendGrid:Email"])
+    .AddRazorRenderer()
+    .AddSendGridSender(sendGridKey);
 
 var app = builder.Build();
 

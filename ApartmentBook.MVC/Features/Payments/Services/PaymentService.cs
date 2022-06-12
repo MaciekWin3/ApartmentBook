@@ -53,14 +53,13 @@ namespace ApartmentBook.MVC.Features.Payments.Services
         {
             var payment = await paymentRepository.GetAsync(id);
             var apartment = await apartmentService.GetAsync(payment.Apartment.Id);
+            if (payment.IsPaid)
+            {
+                return apartment.Id;
+            }
             payment.AmountPaid = payment.Amount;
             await paymentRepository.UpdateAsync(payment);
             return apartment.Id;
-        }
-
-        public async Task CreateReccuringPayments()
-        {
-            //await paymentRepository.
         }
     }
 }

@@ -24,7 +24,9 @@ namespace ApartmentBook.MVC.Features.Apartments.Repositories
 
         public async Task<List<Apartment>> GetAllAsync()
         {
-            return await context.Apartments.ToListAsync();
+            return await context.Apartments
+                .Include(a => a.User)
+                .ToListAsync();
         }
 
         public async Task CreateAsync(Apartment apartment)

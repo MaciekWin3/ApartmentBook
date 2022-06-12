@@ -6,6 +6,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Services
     public class ApartmentService : IApartmentService
     {
         private readonly IApartmentRepository apartmentRepository;
+
         public ApartmentService(IApartmentRepository apartmentRepository)
         {
             this.apartmentRepository = apartmentRepository;
@@ -19,6 +20,11 @@ namespace ApartmentBook.MVC.Features.Apartments.Services
         public async Task<List<Apartment>> GetUsersApartments(string userId)
         {
             return await apartmentRepository.GetUsersApartments(userId);
+        }
+
+        public async Task<List<Apartment>> GetAllAsync()
+        {
+            return await apartmentRepository.GetAllAsync();
         }
 
         public async Task DeleteAsync(Guid id)
