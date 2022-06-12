@@ -5,6 +5,7 @@ using ApartmentBook.MVC.Features.Payments.DTOs;
 using ApartmentBook.MVC.Features.Payments.Models;
 using ApartmentBook.MVC.Features.Payments.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 
 namespace ApartmentBook.MVC.Features.Payments.Controllers
 {
+    [Authorize]
     public class PaymentsController : Controller
     {
         private readonly IPaymentService paymentService;
