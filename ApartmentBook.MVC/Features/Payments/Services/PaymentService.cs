@@ -61,5 +61,10 @@ namespace ApartmentBook.MVC.Features.Payments.Services
             await paymentRepository.UpdateAsync(payment);
             return apartment.Id;
         }
+
+        public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
+        {
+            return await paymentRepository.GetChartData(date, apartmentId);
+        }
     }
 }

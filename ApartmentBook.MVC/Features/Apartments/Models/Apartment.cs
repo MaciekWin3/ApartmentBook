@@ -9,6 +9,8 @@ namespace ApartmentBook.MVC.Features.Apartments.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
         public string Street { get; set; }
         public string Building { get; set; }
         public string Flat { get; set; }
@@ -21,6 +23,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Models
 
         public virtual ApplicationUser User { get; set; }
         public virtual IList<Payment> Payments { get; set; }
+        public string TenantEmail { get; set; }
         //public IList<string> Notes { get; set; }
     }
 }

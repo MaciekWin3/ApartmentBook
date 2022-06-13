@@ -46,11 +46,13 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             else
             {
                 apartments = await apartmentService.GetUsersApartments(user.Id);
+                DistributedCacheEntryOptions options = new();
+                options.SetAbsoluteExpiration(new TimeSpan(0, 0, 30));
                 cache.SetString("apartmentList", JsonConvert.SerializeObject(apartments, Formatting.Indented,
                     new JsonSerializerSettings
                     {
                         PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                    }));
+                    }), options);
             }
 
             return View(apartments);
@@ -66,6 +68,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             var apartment = await apartmentService.GetAsync(id);
             var payments = await paymentService.GetApartmentsPayments((Guid)id);
             ViewData["Payments"] = payments;
+            ViewData["ChartData"] = await paymentService.GetChartData(DateTime.Now, apartment.Id);
             if (apartment is null)
             {
                 return NotFound();
@@ -84,11 +87,12 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Street,Building,Flat,Rent")] ApartmentForCreateDTO apartamentForCreateDTO)
+        public async Task<IActionResult> Create(ApartmentForCreateDTO apartamentForCreateDTO)
         {
             Apartment apartment = new();
             if (ModelState.IsValid)
             {
+                await cache.RemoveAsync("apartmentList");
                 apartment = mapper.Map<ApartmentForCreateDTO, Apartment>(apartamentForCreateDTO);
                 apartment.Id = Guid.NewGuid();
                 apartment.User = await GetUser();
@@ -118,7 +122,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Street,Building,Flat,Rent")] Apartment apartment)
+        public async Task<IActionResult> Edit(Guid id, Apartment apartment)
         {
             if (id != apartment.Id)
             {
@@ -129,6 +133,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             {
                 try
                 {
+                    await cache.RemoveAsync("apartmentList");
                     await apartmentService.UpdateAsync(apartment);
                 }
                 catch (DbUpdateConcurrencyException)

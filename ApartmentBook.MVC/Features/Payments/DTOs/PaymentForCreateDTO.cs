@@ -12,6 +12,8 @@ namespace ApartmentBook.MVC.Features.Payments.DTOs
         public decimal AmountPaid { get; set; } = 0;
 
         public PaymentType Type { get; set; }
+        public Month PaymentMonth { get; set; }
+        public int PaymentYear { get; set; }
         public Guid UserId { get; set; }
 
         // Apartment Data

@@ -103,7 +103,7 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
             {
                 return NotFound();
             }
-            return View(payment);
+            return RedirectToAction("Details", "Apartments", new { id = payment.Apartment.Id });
         }
 
         // POST: Payments/Edit/5

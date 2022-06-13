@@ -17,5 +17,7 @@ namespace ApartmentBook.MVC.Features.Payments.Services
         Task UpdateAsync(Payment payment);
 
         Task<Guid> PayPaymentAndReturnApartmentId(Guid id);
+
+        Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId);
     }
 }

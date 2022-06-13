@@ -49,14 +49,16 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
             await context.SaveChangesAsync();
         }
 
-        // Change for okres property
-        //public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
-        //{
-        //    await context.Payments
-        //        .Include(p => p.Apartment)
-        //        .Where(p => p.Apartment.Id == apartmentId)
-        //        .Where(p => p.CreatedDate.Month == date.Month)
-        //        .
-        //}
+        public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
+        {
+            return context.Payments
+                .Include(p => p.Apartment)
+                .Where(p => p.Apartment.Id == apartmentId)
+                .Where(p => p.PaymentMonth == (Month)date.Month)
+                .Where(p => p.PaymentYear == date.Year)
+                .ToList()
+                .GroupBy(p => p.Type)
+                .ToDictionary(k => k.Key, v => v.Sum(v => v.Amount));
+        }
     }
 }
