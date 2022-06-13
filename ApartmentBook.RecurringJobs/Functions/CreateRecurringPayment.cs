@@ -32,6 +32,8 @@ namespace ApartmentBook.RecurringJobs.Functions
                     Type = PaymentType.Rent,
                     Amount = apartment.Rent,
                     AmountPaid = 0,
+                    PaymentMonth = (Month)DateTime.Now.Month,
+                    PaymentYear = DateTime.Now.Year,
                     Apartment = apartment,
                     User = apartment.User
                 };
