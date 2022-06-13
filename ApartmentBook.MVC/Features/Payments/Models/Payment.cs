@@ -14,8 +14,6 @@ namespace ApartmentBook.MVC.Features.Payments.Models
         public bool IsPaid
         { get { return AmountPaid >= Amount; } }
 
-        //public DateTime CreationDate { get; set; }
-        //public DateTime LastModificationDate { get; set; }
         public virtual Apartment Apartment { get; set; }
 
         public virtual ApplicationUser User { get; set; }

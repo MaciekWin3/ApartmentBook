@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
 namespace ApartmentBook.MVC.Features.Apartments.Controllers
@@ -19,25 +20,42 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         private readonly IPaymentService paymentService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMapper mapper;
+        private readonly IDistributedCache cache;
 
         public ApartmentsController(IApartmentService apartmentService, IPaymentService paymentService,
-            UserManager<ApplicationUser> userManager, IMapper mapper)
+            UserManager<ApplicationUser> userManager, IMapper mapper, IDistributedCache cache)
         {
             this.apartmentService = apartmentService;
             this.paymentService = paymentService;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
-        // GET: Apartment
         public async Task<IActionResult> Index()
         {
             var user = await GetUser();
-            var apartments = await apartmentService.GetUsersApartments(user.Id);
+
+            List<Apartment> apartments = new();
+
+            var cachedApartments = cache.GetString("apartmentList");
+            if (!string.IsNullOrEmpty(cachedApartments))
+            {
+                apartments = JsonConvert.DeserializeObject<List<Apartment>>(cachedApartments);
+            }
+            else
+            {
+                apartments = await apartmentService.GetUsersApartments(user.Id);
+                cache.SetString("apartmentList", JsonConvert.SerializeObject(apartments, Formatting.Indented,
+                    new JsonSerializerSettings
+                    {
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                    }));
+            }
+
             return View(apartments);
         }
 
-        // GET: Apartment/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id is null)
@@ -56,7 +74,6 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             return View(apartment);
         }
 
-        // GET: Apartment/Create
         public IActionResult Create()
         {
             return View();
@@ -81,7 +98,6 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             return View(apartment);
         }
 
-        // GET: Apartment/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id is null)

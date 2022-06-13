@@ -48,5 +48,15 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
             context.Payments.Remove(payment);
             await context.SaveChangesAsync();
         }
+
+        // Change for okres property
+        //public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
+        //{
+        //    await context.Payments
+        //        .Include(p => p.Apartment)
+        //        .Where(p => p.Apartment.Id == apartmentId)
+        //        .Where(p => p.CreatedDate.Month == date.Month)
+        //        .
+        //}
     }
 }
