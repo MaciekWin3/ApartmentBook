@@ -15,7 +15,7 @@ namespace ApartmentBook.MVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Apartments");
         }
 
         public IActionResult Privacy()
@@ -36,23 +36,5 @@ namespace ApartmentBook.MVC.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-    }
-
-    public class LineChartData
-    {
-        public DateTime xValue;
-        public double yValue;
-        public double yValue1;
-    }
-
-    public class ChartModel
-    {
-        public List<ChartFields> ChartData { get; set; }
-    }
-
-    public class ChartFields
-    {
-        public string EmployeeName { get; set; }
-        public int Salery { get; set; }
     }
 }

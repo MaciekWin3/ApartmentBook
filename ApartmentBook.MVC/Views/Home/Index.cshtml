@@ -7,29 +7,33 @@
     <h1 class="display-4">Apartment Book Dashboard</h1>
     <p>Lorem ipsum pale moje jointy i wjezdzam w nią</p>
     <div class="container">
-      <div class="row align-items-start">
-        <div class="col-8">
-         <div>
-            <canvas id="myChart"></canvas>
+        <div class="row align-items-start">
+            <div class="col-8">
+                <div>
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div>
+                    <canvas id="chart"></canvas>
+                </div>
+            </div>
+            <div class="col-4">
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+                One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
+            </div>
         </div>
-        </div>
-        <div class="col-4">
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-          One of three columns Lorem ipsum pale moje jointy i wjezdzam w nią
-        </div>
-      </div>
     </div>
 </div>
 
 <script>
 
-    $.get("/Home/Chart", function (response) { 
+
+    $.get("/Home/Chart", function(response) {
         const labels = [
             'January',
             'February',
@@ -39,26 +43,26 @@
             'June',
         ];
 
-      const data = {
-        labels: labels,
-        datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          data: response
-        }]
-      };
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: response
+            }]
+        };
 
-      const config = {
-        type: 'line',
-        data: data,
-        options: {}
-      };
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
 
-      const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-      );
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
     });
 
 </script>

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using System.Data;
 
 namespace ApartmentBook.MVC.Features.Apartments.Controllers
 {
@@ -182,6 +183,34 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> NewChart(Guid id)
+        {
+            Console.WriteLine(id);
+            var data = await paymentService.GetChartData(DateTime.Now, id);
+            List<object> iData = new List<object>();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Label", System.Type.GetType("System.String"));
+            dt.Columns.Add("Value", System.Type.GetType("System.Int32"));
+            foreach (var item in data)
+            {
+                DataRow dr = dt.NewRow();
+                dr["Label"] = item.Key.ToString();
+                dr["Value"] = item.Value;
+                dt.Rows.Add(dr);
+            }
+
+            //Looping and extracting each DataColumn to List<Object>
+            foreach (DataColumn dc in dt.Columns)
+            {
+                List<object> x = new List<object>();
+                x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
+                iData.Add(x);
+            }
+            //Source data returned as JSON
+            return Json(iData);
         }
 
         public async Task<IActionResult> RedirectToCreatePayment(Guid id)

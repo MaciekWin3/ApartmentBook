@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    int i = 1;
 }
 
 <h1>Index</h1>
@@ -12,36 +13,33 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountPaid)
-            </th>
-            <th></th>
+            <th scope="col">#</th>
+            <th scope="col">Type</th>
+            <th scope="col">Month</th>
+            <th scope="col">Year</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Amount Paid</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountPaid)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var payment in Model)
+        {
+            <tr class="table-@(payment.IsPaid ? "success" : "danger")">
+                <th scope="row">@i</th>
+                <td>@payment.Type</td>
+                <td>@payment.PaymentMonth</td>
+                <td>@payment.PaymentYear</td>
+                <td>@payment.Amount</td>
+                <td>@payment.AmountPaid</td>
+                <td>
+                    <a asp-controller="Payments" asp-action="PayPayment" asp-route-id="@payment.Id" class="btn btn-primary">Pay</a>
+                    <a asp-controller="Payments" asp-action="Details" asp-route-id="@payment.Id" class="btn btn-info">Details</a>
+                    <a asp-controller="Payments" asp-action="Edit" asp-route-id="@payment.Id" class="btn btn-warning">Edit</a>
+                    <a asp-controller="Payments" asp-action="Delete" asp-route-id="@payment.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            i++;
+        }
     </tbody>
 </table>
