@@ -51,6 +51,7 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
 
         public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
         {
+            // Needs refactor to raw sql
             return context.Payments
                 .Include(p => p.Apartment)
                 .Where(p => p.Apartment.Id == apartmentId)

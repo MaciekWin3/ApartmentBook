@@ -60,13 +60,6 @@ builder.Services
     .AddRazorRenderer()
     .AddSendGridSender(sendGridKey);
 
-// Azure Redis, to remove (too expensive)
-builder.Services.AddDistributedRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("AzureRedisConnection");
-});
-
-
 var app = builder.Build();
 
 var supportedCultures = new[]
