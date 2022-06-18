@@ -34,4 +34,11 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Tenants\DTOs\" />
+    <Folder Include="Features\Tenants\Controllers\" />
+    <Folder Include="Features\Tenants\Services\" />
+    <Folder Include="Features\Tenants\Repositories\" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
 ﻿using ApartmentBook.MVC.Features.Apartments.Models;
 using ApartmentBook.MVC.Features.Auth.Models;
 using ApartmentBook.MVC.Features.Payments.Models;
+using ApartmentBook.MVC.Features.Tenants.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -58,6 +59,7 @@ namespace ApartmentBook.MVC.Data
             BuildModelForApplicationUsers(modelBuilder);
             BuildModelForApartments(modelBuilder);
             BuildModelForPayment(modelBuilder);
+            BuildModelForTenant(modelBuilder);
         }
 
         private static void BuildModelForApplicationUsers(ModelBuilder modelBuilder)
@@ -103,6 +105,13 @@ namespace ApartmentBook.MVC.Data
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Type)
                 .HasConversion(new EnumToStringConverter<PaymentType>());
+        }
+
+        private static void BuildModelForTenant(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Tenant>()
+                .ToTable("Tenants")
+                .HasKey(t => new { t.Id });
         }
     }
 }

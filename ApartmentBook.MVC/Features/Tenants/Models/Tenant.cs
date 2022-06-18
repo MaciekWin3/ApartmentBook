@@ -1,4 +1,4 @@
-﻿namespace ApartmentBook.MVC.Features.Tenants
+﻿namespace ApartmentBook.MVC.Features.Tenants.Models
 {
     public class Tenant
     {

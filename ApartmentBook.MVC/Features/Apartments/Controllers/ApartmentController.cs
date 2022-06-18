@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Data;
 
+// Fix bug - Controller name
 namespace ApartmentBook.MVC.Features.Apartments.Controllers
 {
     [Authorize]
@@ -47,7 +48,6 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             var apartment = await apartmentService.GetAsync(id);
             var payments = await paymentService.GetApartmentsPayments((Guid)id);
             ViewData["Payments"] = payments;
-            ViewData["ChartData"] = await paymentService.GetChartData(DateTime.Now, apartment.Id);
             if (apartment is null)
             {
                 return NotFound();

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using FluentEmail.Core;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -6,13 +7,15 @@ namespace ApartmentBook.MVC.Features.Emails
 {
     public class EmailSender : IEmailSender
     {
-        private readonly ILogger logger;
+        private readonly ILogger<EmailSender> logger;
         private readonly IConfiguration configuration;
+        private readonly IFluentEmail fluentEmail;
 
-        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration)
+        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration, IFluentEmail fluentEmail)
         {
             this.logger = logger;
             this.configuration = configuration;
+            this.fluentEmail = fluentEmail;
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string message)
@@ -22,11 +25,13 @@ namespace ApartmentBook.MVC.Features.Emails
             {
                 throw new Exception("SendGridKey not found!");
             }
-            await Execute(sendGridKey, subject, message, toEmail);
+            var result = await Execute(sendGridKey, subject, message, toEmail);
         }
 
-        public async Task Execute(string apiKey, string subject, string message, string toEmail, string title = "Apartment Book")
+        private async Task<bool> Execute(string apiKey, string subject, string message, string toEmail, string title = "Apartment Book")
         {
+            var from = configuration.GetSection("SendGrid:Email").Value;
+
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
@@ -38,14 +43,13 @@ namespace ApartmentBook.MVC.Features.Emails
             msg.AddTo(new EmailAddress(toEmail));
 
             var response = await client.SendEmailAsync(msg);
-            if (response.IsSuccessStatusCode)
-            {
-                logger.LogInformation("Email queued successfully");
-            }
-            else
+            if (!response.IsSuccessStatusCode)
             {
                 logger.LogError("Failed to send email");
+                return false;
             }
+            logger.LogInformation("Email queued successfully");
+            return true;
         }
     }
 }
