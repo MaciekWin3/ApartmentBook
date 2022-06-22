@@ -18,6 +18,7 @@ namespace ApartmentBook.MVC.Data
         public override DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Apartment> Apartments { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Tenant> Tenants { get; set; }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
@@ -112,6 +113,19 @@ namespace ApartmentBook.MVC.Data
             modelBuilder.Entity<Tenant>()
                 .ToTable("Tenants")
                 .HasKey(t => new { t.Id });
+
+            modelBuilder.Entity<Tenant>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Tenants);
+
+            modelBuilder.Entity<Tenant>()
+                .HasMany(t => t.Payments)
+                .WithOne(p => p.Tenant);
+
+            // This one propably needs a fix
+            modelBuilder.Entity<Tenant>()
+                .HasOne(t => t.Apartment)
+                .WithMany(a => a.Tenant);
         }
     }
 }

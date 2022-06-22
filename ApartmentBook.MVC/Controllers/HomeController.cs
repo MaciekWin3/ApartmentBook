@@ -6,11 +6,11 @@ namespace ApartmentBook.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         public IActionResult Index()
@@ -21,14 +21,6 @@ namespace ApartmentBook.MVC.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        public List<int> Chart()
-        {
-            return new List<int>()
-            {
-                20, 40, 50, 30, 60, 30, 45
-            };
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

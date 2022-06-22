@@ -14,12 +14,14 @@ namespace ApartmentBook.MVC.Features.Payments
 
         private void CreateEntityToDTOMappings()
         {
+            CreateMap<Payment, PaymentDTO>();
             CreateMap<Payment, PaymentForCreateDTO>();
             CreateMap<Payment, PaymentForUpdateDTO>();
         }
 
         private void CreateDTOToEntityMappings()
         {
+            CreateMap<PaymentDTO, Payment>();
             CreateMap<PaymentForCreateDTO, Payment>();
             CreateMap<PaymentForUpdateDTO, Payment>();
         }
