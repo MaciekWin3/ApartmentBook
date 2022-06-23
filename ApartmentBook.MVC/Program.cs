@@ -47,7 +47,7 @@ builder.Services.AddTransient<IApartmentService, ApartmentService>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
 
 // SendGrid
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailSender, EmailService>();
 var sendGridKey = builder.Configuration["SendGrid:Key"];
 
 builder.Services.AddSendGrid(options =>

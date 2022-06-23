@@ -5,13 +5,13 @@ using SendGrid.Helpers.Mail;
 
 namespace ApartmentBook.MVC.Features.Emails
 {
-    public class EmailSender : IEmailSender
+    public class EmailService : IEmailSender
     {
-        private readonly ILogger<EmailSender> logger;
+        private readonly ILogger<EmailService> logger;
         private readonly IConfiguration configuration;
         private readonly IFluentEmail fluentEmail;
 
-        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration, IFluentEmail fluentEmail)
+        public EmailService(ILogger<EmailService> logger, IConfiguration configuration, IFluentEmail fluentEmail)
         {
             this.logger = logger;
             this.configuration = configuration;

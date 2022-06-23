@@ -166,8 +166,8 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         {
             Console.WriteLine(id);
             var data = await paymentService.GetChartData(DateTime.Now, id);
-            List<object> iData = new();
-            DataTable dt = new();
+            List<object> iData = new List<object>();
+            DataTable dt = new DataTable();
             dt.Columns.Add("Label", System.Type.GetType("System.String"));
             dt.Columns.Add("Value", System.Type.GetType("System.Int32"));
             foreach (var item in data)
@@ -180,7 +180,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
 
             foreach (DataColumn dc in dt.Columns)
             {
-                List<object> x = new();
+                List<object> x = new List<object>();
                 x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
                 iData.Add(x);
             }
@@ -192,13 +192,6 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             TempData["Apartament"] = JsonConvert.SerializeObject(await apartmentService.GetAsync(id));
             TempData.Keep("Apartament");
             return RedirectToAction("Create", "Payments");
-        }
-
-        public async Task<IActionResult> RedirectToEditPayment(Guid id)
-        {
-            TempData["Apartament"] = JsonConvert.SerializeObject(await apartmentService.GetAsync(id));
-            TempData.Keep("Apartament");
-            return RedirectToAction("Edit", "Payments");
         }
 
         private async Task<ApplicationUser> GetUser()
