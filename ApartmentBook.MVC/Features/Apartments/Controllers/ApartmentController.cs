@@ -2,6 +2,7 @@
 using ApartmentBook.MVC.Features.Apartments.Models;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
+using ApartmentBook.MVC.Features.Emails;
 using ApartmentBook.MVC.Features.Payments.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -19,14 +20,16 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
     {
         private readonly IApartmentService apartmentService;
         private readonly IPaymentService paymentService;
+        private readonly IEmailService emailService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMapper mapper;
 
         public ApartmentsController(IApartmentService apartmentService, IPaymentService paymentService,
-            UserManager<ApplicationUser> userManager, IMapper mapper)
+            IEmailService emailService, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             this.apartmentService = apartmentService;
             this.paymentService = paymentService;
+            this.emailService = emailService;
             this.userManager = userManager;
             this.mapper = mapper;
         }
@@ -139,7 +142,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
 
             var apartment = await apartmentService.GetAsync(id);
 
-            if (apartment == null)
+            if (apartment is null)
             {
                 return NotFound();
             }
@@ -159,6 +162,15 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<bool> SendEmail(Guid id)
+        {
+            var apartment = await apartmentService.GetAsync(id);
+            await emailService.SendEmailAsync(string.Empty, string.Empty, string.Empty);
+
+            return true;
         }
 
         [HttpGet]

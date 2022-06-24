@@ -1,41 +1,52 @@
-﻿using ApartmentBook.MVC.Data;
+﻿using ApartmentBook.MVC.Features.Auth.Models;
+using ApartmentBook.MVC.Features.Tenants.DTOs;
 using ApartmentBook.MVC.Features.Tenants.Models;
+using ApartmentBook.MVC.Features.Tenants.Services;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApartmentBook.MVC.Features.Tenants.Controllers
 {
+    [Authorize]
     public class TenantsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITenantService tenantService;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IMapper mapper;
 
-        public TenantsController(ApplicationDbContext context)
+        public TenantsController(ITenantService tenantService,
+            UserManager<ApplicationUser> userManager, IMapper mapper)
         {
-            _context = context;
+            this.tenantService = tenantService;
+            this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         // GET: Tenants
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tenants.ToListAsync());
+            var user = await GetUser();
+            var tenants = await tenantService.GetUsersTenants(user.Id);
+            return View(mapper.Map<List<TenantDTO>>(tenants));
         }
 
         // GET: Tenants/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.Tenants == null)
+            if (id is null)
+            {
+                return NotFound();
+            }
+            var tenant = await tenantService.GetAsync(id);
+            if (tenant is null)
             {
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tenant == null)
-            {
-                return NotFound();
-            }
-
-            return View(tenant);
+            return View(mapper.Map<TenantDTO>(tenant));
         }
 
         // GET: Tenants/Create
@@ -49,13 +60,16 @@ namespace ApartmentBook.MVC.Features.Tenants.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,Surname,PhoneNumber,Email,RoomatesAmount,Notes")] Tenant tenant)
+        public async Task<IActionResult> Create([Bind("FirstName,Surname,PhoneNumber,Email,RoomatesAmount,Notes")] TenantForCreateDTO tenantDTO)
         {
+            Tenant tenant = new();
             if (ModelState.IsValid)
             {
+                tenant = mapper.Map<Tenant>(tenantDTO);
                 tenant.Id = Guid.NewGuid();
-                _context.Add(tenant);
-                await _context.SaveChangesAsync();
+                tenant.User = await GetUser();
+                //tenant.Apartment =
+                await tenantService.CreateAsync(tenant);
                 return RedirectToAction(nameof(Index));
             }
             return View(tenant);
@@ -64,13 +78,13 @@ namespace ApartmentBook.MVC.Features.Tenants.Controllers
         // GET: Tenants/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.Tenants == null)
+            if (id is null)
             {
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants.FindAsync(id);
-            if (tenant == null)
+            var tenant = await tenantService.GetAsync(id);
+            if (tenant is null)
             {
                 return NotFound();
             }
@@ -82,23 +96,20 @@ namespace ApartmentBook.MVC.Features.Tenants.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,FirstName,Surname,PhoneNumber,Email,RoomatesAmount,Notes")] Tenant tenant)
+        public async Task<IActionResult> Edit(Guid id, [Bind("FirstName,Surname,PhoneNumber,Email,RoomatesAmount,Notes")] TenantForUpdateDTO tenantForUpdateDTO)
         {
-            if (id != tenant.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+            var tenantExists = await tenantService.GetAsync(id) is not null;
+            Tenant tenant = new();
+            if (ModelState.IsValid && tenantExists)
             {
                 try
                 {
-                    _context.Update(tenant);
-                    await _context.SaveChangesAsync();
+                    tenant = mapper.Map<Tenant>(tenantForUpdateDTO);
+                    await tenantService.UpdateAsync(tenant);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TenantExists(tenant.Id))
+                    if (tenantExists is not true)
                     {
                         return NotFound();
                     }
@@ -109,24 +120,22 @@ namespace ApartmentBook.MVC.Features.Tenants.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(tenant);
+            return View(mapper.Map<TenantDTO>(tenant));
         }
 
         // GET: Tenants/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.Tenants == null)
+            if (id is null)
             {
                 return NotFound();
             }
-
-            var tenant = await _context.Tenants
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tenant == null)
+            var tenant = await tenantService.GetAsync(id);
+            if (tenant is null)
             {
                 return NotFound();
             }
-
+            // Map to DTO?
             return View(tenant);
         }
 
@@ -135,23 +144,18 @@ namespace ApartmentBook.MVC.Features.Tenants.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.Tenants == null)
+            var tenant = await tenantService.GetAsync(id);
+            if (tenant is not null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Tenants'  is null.");
-            }
-            var tenant = await _context.Tenants.FindAsync(id);
-            if (tenant != null)
-            {
-                _context.Tenants.Remove(tenant);
+                await tenantService.DeleteAsync(tenant.Id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TenantExists(Guid id)
+        private async Task<ApplicationUser> GetUser()
         {
-            return _context.Tenants.Any(e => e.Id == id);
+            return await userManager.GetUserAsync(HttpContext.User);
         }
     }
 }

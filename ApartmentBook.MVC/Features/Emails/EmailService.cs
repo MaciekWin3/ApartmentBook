@@ -5,7 +5,7 @@ using SendGrid.Helpers.Mail;
 
 namespace ApartmentBook.MVC.Features.Emails
 {
-    public class EmailService : IEmailSender
+    public class EmailService : IEmailSender, IEmailService
     {
         private readonly ILogger<EmailService> logger;
         private readonly IConfiguration configuration;

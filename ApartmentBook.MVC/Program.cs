@@ -5,6 +5,8 @@ using ApartmentBook.MVC.Features.Auth.Models;
 using ApartmentBook.MVC.Features.Emails;
 using ApartmentBook.MVC.Features.Payments.Repositories;
 using ApartmentBook.MVC.Features.Payments.Services;
+using ApartmentBook.MVC.Features.Tenants.Repositories;
+using ApartmentBook.MVC.Features.Tenants.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -41,13 +43,16 @@ builder.Services.AddAutoMapper(typeof(Program));
 // Repositories
 builder.Services.AddTransient<IApartmentRepository, ApartmentRepository>();
 builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
+builder.Services.AddTransient<ITenantRepository, TenantRepository>();
 
 // Services
 builder.Services.AddTransient<IApartmentService, ApartmentService>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
+builder.Services.AddTransient<ITenantService, TenantService>();
 
 // SendGrid
 builder.Services.AddTransient<IEmailSender, EmailService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 var sendGridKey = builder.Configuration["SendGrid:Key"];
 
 builder.Services.AddSendGrid(options =>
