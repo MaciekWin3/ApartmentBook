@@ -38,7 +38,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         {
             var user = await GetUser();
             var apartments = await apartmentService.GetUsersApartments(user.Id);
-            return View(apartments);
+            return View(mapper.Map<List<ApartmentDTO>>(apartments));
         }
 
         public async Task<IActionResult> Details(Guid? id)
@@ -56,11 +56,12 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
                 return NotFound();
             }
 
-            return View(apartment);
+            return View(mapper.Map<ApartmentDTO>(apartment));
         }
 
         public IActionResult Create()
         {
+            ViewData["Tenants"] = new List<string>() { "Maciek", "Filip", "Karol" };
             return View();
         }
 
@@ -80,7 +81,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
                 await apartmentService.CreateAsync(apartment);
                 return RedirectToAction(nameof(Index));
             }
-            return View(apartment);
+            return View(mapper.Map<Apartment>(apartment));
         }
 
         public async Task<IActionResult> Edit(Guid? id)
@@ -95,7 +96,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             {
                 return NotFound();
             }
-            return View(apartment);
+            return View(mapper.Map<ApartmentDTO>(apartment));
         }
 
         // POST: Apartment/Edit/5
@@ -103,22 +104,20 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Apartment apartment)
+        public async Task<IActionResult> Edit(Guid id, ApartmentForUpdateDTO apartmentForUpdateDTO)
         {
-            if (id != apartment.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+            var apartmentExists = await apartmentService.GetAsync(id) is not null;
+            Apartment apartment = new();
+            if (ModelState.IsValid && apartmentExists)
             {
                 try
                 {
+                    apartment = mapper.Map<Apartment>(apartmentForUpdateDTO);
                     await apartmentService.UpdateAsync(apartment);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await apartmentService.GetAsync(id) is null)
+                    if (apartmentExists)
                     {
                         return NotFound();
                     }
@@ -129,7 +128,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(apartment);
+            return View(mapper.Map<ApartmentDTO>(apartment));
         }
 
         // GET: Apartment/Delete/5
@@ -168,7 +167,8 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         public async Task<bool> SendEmail(Guid id)
         {
             var apartment = await apartmentService.GetAsync(id);
-            await emailService.SendEmailAsync(string.Empty, string.Empty, string.Empty);
+            var to = apartment.Tenant.FirstOrDefault().Email;
+            //await emailService.SendEmailAsync(to);
 
             return true;
         }

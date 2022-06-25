@@ -14,12 +14,14 @@ namespace ApartmentBook.MVC.Features.Apartments
 
         private void CreateEntityToDTOMappings()
         {
+            CreateMap<Apartment, ApartmentDTO>();
             CreateMap<Apartment, ApartmentForCreateDTO>();
             CreateMap<Apartment, ApartmentForUpdateDTO>();
         }
 
         private void CreateDTOToEntityMappings()
         {
+            CreateMap<ApartmentDTO, Apartment>();
             CreateMap<ApartmentForCreateDTO, Apartment>();
             CreateMap<ApartmentForUpdateDTO, Apartment>();
         }

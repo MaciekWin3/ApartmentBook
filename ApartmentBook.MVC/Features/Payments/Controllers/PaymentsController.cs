@@ -35,7 +35,7 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         {
             var user = await GetUser();
             var payments = await paymentService.GetUsersPayments(user.Id);
-            return View(payments);
+            return View(mapper.Map<List<PaymentDTO>>(payments));
         }
 
         // GET: Payments/Details/5
@@ -52,7 +52,7 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
                 return NotFound();
             }
 
-            return View(payment);
+            return View(mapper.Map<PaymentDTO>(payment));
         }
 
         // GET: Payments/Create
@@ -87,7 +87,7 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
                 await paymentService.CreateAsync(payment);
                 return RedirectToAction("Details", "Apartments", new { id = apartmentId });
             }
-            return View(payment);
+            return View(mapper.Map<PaymentDTO>(payment));
         }
 
         // GET: Payments/Edit/5
@@ -111,17 +111,16 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Type,Amount,AmountPaid")] Payment payment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Type,Amount,AmountPaid")] PaymentForUpdateDTO paymentForUpdateDTO)
         {
-            if (id != payment.Id)
-            {
-                return NotFound();
-            }
+            var paymentExists = await paymentService.GetAsync(id) is not null;
+            Payment payment = new();
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    payment = mapper.Map<Payment>(paymentForUpdateDTO);
                     await paymentService.UpdateAsync(payment);
                 }
                 catch (DbUpdateConcurrencyException)

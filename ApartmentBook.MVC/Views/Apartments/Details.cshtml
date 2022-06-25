@@ -1,5 +1,5 @@
 ﻿@using ApartmentBook.MVC.Features.Payments.Models
-@model ApartmentBook.MVC.Features.Apartments.Models.Apartment
+@model ApartmentBook.MVC.Features.Apartments.DTOs.ApartmentDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -42,7 +42,7 @@
                     <div class="ms-2 me-auto">
                         <a class="btn btn-outline-primary" asp-action="RedirectToCreatePayment" asp-route-id="@Model?.Id">Create payment</a>
                         <a class="btn btn-outline-primary" asp-action="SendEmail" asp-route-id="@Model?.Id">Send email</a>
-                        <a class="btn btn-outline-primary" asp-action="RedirectToEditPayment" asp-route-id="@Model?.Id">Edit</a>
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
                         <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
                     </div>
                 </li>

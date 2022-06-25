@@ -72,7 +72,7 @@ namespace ApartmentBook.MVC.Features.Tenants.Controllers
                 await tenantService.CreateAsync(tenant);
                 return RedirectToAction(nameof(Index));
             }
-            return View(tenant);
+            return View(mapper.Map<TenantDTO>(tenant));
         }
 
         // GET: Tenants/Edit/5

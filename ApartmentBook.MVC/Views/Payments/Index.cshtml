@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ApartmentBook.MVC.Features.Payments.Models.Payment>
+﻿@model IEnumerable<ApartmentBook.MVC.Features.Payments.DTOs.PaymentDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -25,6 +25,7 @@
     <tbody>
         @foreach (var payment in Model)
         {
+
             <tr class="table-@(payment.IsPaid ? "success" : "danger")">
                 <th scope="row">@i</th>
                 <td>@payment.Type</td>

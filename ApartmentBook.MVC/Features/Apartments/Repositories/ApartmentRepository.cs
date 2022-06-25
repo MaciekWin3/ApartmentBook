@@ -12,7 +12,9 @@ namespace ApartmentBook.MVC.Features.Apartments.Repositories
 
         public async Task<Apartment> GetAsync(Guid? id)
         {
-            return await context.Apartments.FirstOrDefaultAsync(a => a.Id == id);
+            return await context.Apartments
+                .Include(a => a.Tenant)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<List<Apartment>> GetUsersApartments(string userId)
