@@ -1,0 +1,7 @@
+﻿@model ApartmentBook.MVC.Features.Emails.Models.PaymentReminderEmail
+
+<p>Test email @Model.Name</p>
+@foreach(var payment in @Model.Payments)
+{
+    <p style="color:blue" >@payment.Amount</p>
+}

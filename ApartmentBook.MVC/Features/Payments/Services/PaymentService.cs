@@ -1,6 +1,7 @@
 ﻿using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Payments.Models;
 using ApartmentBook.MVC.Features.Payments.Repositories;
+using System.Text;
 
 namespace ApartmentBook.MVC.Features.Payments.Services
 {
@@ -22,12 +23,12 @@ namespace ApartmentBook.MVC.Features.Payments.Services
 
         public async Task<List<Payment>> GetApartmentsPayments(Guid apartmentId)
         {
-            return await paymentRepository.GetApartmentPayments(apartmentId);
+            return await paymentRepository.GetApartmentPaymentsAsync(apartmentId);
         }
 
         public async Task<List<Payment>> GetUsersPayments(string userId)
         {
-            return await paymentRepository.GetUsersPayments(userId);
+            return await paymentRepository.GetUsersPaymentsAsync(userId);
         }
 
         public async Task DeleteAsync(Guid id)
@@ -65,6 +66,35 @@ namespace ApartmentBook.MVC.Features.Payments.Services
         public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
         {
             return await paymentRepository.GetChartData(date, apartmentId);
+        }
+
+        public async Task<string> GenerateCsvPaymentSummary(CsvPaymetsType type, string userId = null, Guid? apartmentId = null)
+        {
+            List<Payment> payments = new();
+            switch (type)
+            {
+                case CsvPaymetsType.All:
+                    payments = await paymentRepository.GetPaymentsBetweeenDatesAsync(DateTime.MinValue, DateTime.Now);
+                    break;
+
+                case CsvPaymetsType.User when userId is not null:
+                    payments = await paymentRepository.GetUsersPaymentsAsync(userId);
+                    break;
+
+                case CsvPaymetsType.Apartment when apartmentId is not null:
+                    payments = await paymentRepository.GetApartmentPaymentsAsync((Guid)apartmentId);
+                    break;
+
+                default:
+                    throw new Exception();
+            }
+            var sb = new StringBuilder();
+            sb.AppendLine("");
+            foreach (var payment in payments)
+            {
+                sb.AppendLine($"");
+            }
+            return string.Empty;
         }
     }
 }

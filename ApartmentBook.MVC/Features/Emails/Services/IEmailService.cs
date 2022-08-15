@@ -1,4 +1,4 @@
-﻿namespace ApartmentBook.MVC.Features.Emails
+﻿namespace ApartmentBook.MVC.Features.Emails.Services
 {
     public interface IEmailService
     {

@@ -10,6 +10,8 @@ namespace ApartmentBook.MVC.Features.Tenants.Repositories
 
         Task<Tenant> GetAsync(Guid? id);
 
+        Task<Tenant> GetAsyncByEmail(string email);
+
         Task<List<Tenant>> GetUsersTenants(string userId);
 
         Task UpdateAsync(Tenant tenant);

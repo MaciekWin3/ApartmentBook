@@ -17,6 +17,11 @@ namespace ApartmentBook.MVC.Features.Tenants.Services
             return await tenantRepository.GetAsync(id);
         }
 
+        public async Task<Tenant> GetAsyncByEmail(string email)
+        {
+            return await tenantRepository.GetAsyncByEmail(email);
+        }
+
         public async Task<List<Tenant>> GetUsersTenants(string userId)
         {
             return await tenantRepository.GetUsersTenants(userId);

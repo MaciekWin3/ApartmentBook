@@ -2,8 +2,9 @@
 using ApartmentBook.MVC.Features.Apartments.Models;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
-using ApartmentBook.MVC.Features.Emails;
+using ApartmentBook.MVC.Features.Emails.Services;
 using ApartmentBook.MVC.Features.Payments.Services;
+using ApartmentBook.MVC.Features.Tenants.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Data;
 
-// Fix bug - Controller name
 namespace ApartmentBook.MVC.Features.Apartments.Controllers
 {
     [Authorize]
@@ -20,18 +20,22 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
     {
         private readonly IApartmentService apartmentService;
         private readonly IPaymentService paymentService;
+        private readonly ITenantService tenantService;
         private readonly IEmailService emailService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMapper mapper;
+        private readonly ILogger<ApartmentsController> logger;
 
-        public ApartmentsController(IApartmentService apartmentService, IPaymentService paymentService,
-            IEmailService emailService, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public ApartmentsController(IApartmentService apartmentService, IPaymentService paymentService, ITenantService tenantService,
+            IEmailService emailService, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<ApartmentsController> logger)
         {
             this.apartmentService = apartmentService;
             this.paymentService = paymentService;
+            this.tenantService = tenantService;
             this.emailService = emailService;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -59,9 +63,11 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             return View(mapper.Map<ApartmentDTO>(apartment));
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["Tenants"] = new List<string>() { "Maciek", "Filip", "Karol" };
+            var user = await GetUser();
+            var tenants = await tenantService.GetUsersTenants(user.Id);
+            ViewData["Tenants"] = tenants.Select(t => t.FirstName).ToList();
             return View();
         }
 
@@ -96,7 +102,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             {
                 return NotFound();
             }
-            return View(mapper.Map<ApartmentDTO>(apartment));
+            return View(mapper.Map<ApartmentForUpdateDTO>(apartment));
         }
 
         // POST: Apartment/Edit/5
@@ -167,8 +173,13 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         public async Task<bool> SendEmail(Guid id)
         {
             var apartment = await apartmentService.GetAsync(id);
-            var to = apartment.Tenant.FirstOrDefault().Email;
-            //await emailService.SendEmailAsync(to);
+            var to = apartment.Tenant.FirstOrDefault()?.Email;
+            if (to is null)
+            {
+                logger.LogInformation("No tenant found for apartment! Email won't be send!");
+                return false;
+            }
+            await emailService.SendEmailAsync(to, subject: "Apartment Book", message: "");
 
             return true;
         }
@@ -178,8 +189,8 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         {
             Console.WriteLine(id);
             var data = await paymentService.GetChartData(DateTime.Now, id);
-            List<object> iData = new List<object>();
-            DataTable dt = new DataTable();
+            List<object> iData = new();
+            DataTable dt = new();
             dt.Columns.Add("Label", System.Type.GetType("System.String"));
             dt.Columns.Add("Value", System.Type.GetType("System.Int32"));
             foreach (var item in data)
@@ -192,7 +203,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
 
             foreach (DataColumn dc in dt.Columns)
             {
-                List<object> x = new List<object>();
+                List<object> x = new();
                 x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
                 iData.Add(x);
             }

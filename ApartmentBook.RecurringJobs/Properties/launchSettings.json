@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "ApartmentBook.RecurringJobs": {
-      "commandName": "Project",
-      "commandLineArgs": "--port 7066",
-      "launchBrowser": false
-    }
-  }
-}

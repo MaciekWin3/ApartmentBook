@@ -15,11 +15,6 @@ namespace ApartmentBook.MVC.Tests.Features.Apartments.Services
             apartmentRepositoryMock = new Mock<IApartmentRepository>();
         }
 
-        private ApartmentService CreateService()
-        {
-            return new ApartmentService(apartmentRepositoryMock.Object);
-        }
-
         // To fix
         [Test]
         public async Task ShouldReturnApartment()
@@ -35,6 +30,11 @@ namespace ApartmentBook.MVC.Tests.Features.Apartments.Services
 
             // Assert
             Assert.That(result, Is.EqualTo(apartment));
+        }
+
+        private ApartmentService CreateService()
+        {
+            return new ApartmentService(apartmentRepositoryMock.Object);
         }
     }
 }

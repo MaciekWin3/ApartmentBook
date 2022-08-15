@@ -8,9 +8,11 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
 
         Task DeleteAsync(Payment payment);
 
-        Task<List<Payment>> GetApartmentPayments(Guid apartmentId);
+        Task<List<Payment>> GetApartmentPaymentsAsync(Guid apartmentId);
 
-        Task<List<Payment>> GetUsersPayments(string userId);
+        Task<List<Payment>> GetUsersPaymentsAsync(string userId);
+
+        Task<List<Payment>> GetPaymentsBetweeenDatesAsync(DateTime from, DateTime to);
 
         Task<Payment> GetAsync(Guid? id);
 

@@ -5,9 +5,15 @@ namespace ApartmentBook.MVC.Features.Tenants.Services
     public interface ITenantService
     {
         Task CreateAsync(Tenant tenant);
+
         Task DeleteAsync(Guid id);
+
         Task<Tenant> GetAsync(Guid? id);
+
+        Task<Tenant> GetAsyncByEmail(string email);
+
         Task<List<Tenant>> GetUsersTenants(string userId);
+
         Task UpdateAsync(Tenant tenant);
     }
 }

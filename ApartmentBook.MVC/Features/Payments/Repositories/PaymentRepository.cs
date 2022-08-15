@@ -17,17 +17,25 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<List<Payment>> GetApartmentPayments(Guid apartmentId)
+        public async Task<List<Payment>> GetApartmentPaymentsAsync(Guid apartmentId)
         {
             return await context.Payments
                 .Where(p => p.Apartment.Id == apartmentId)
                 .ToListAsync();
         }
 
-        public async Task<List<Payment>> GetUsersPayments(string userId)
+        public async Task<List<Payment>> GetUsersPaymentsAsync(string userId)
         {
             return await context.Payments
                 .Where(p => p.Apartment.User.Id == userId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Payment>> GetPaymentsBetweeenDatesAsync(DateTime from, DateTime to)
+        {
+            return await context.Payments
+                .Where(p => p.CreatedDate >= from)
+                .Where(p => p.CreatedDate <= to)
                 .ToListAsync();
         }
 

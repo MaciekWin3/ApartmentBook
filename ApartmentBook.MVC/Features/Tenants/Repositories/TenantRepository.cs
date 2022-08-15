@@ -16,6 +16,12 @@ namespace ApartmentBook.MVC.Features.Tenants.Repositories
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
+        public async Task<Tenant> GetAsyncByEmail(string email)
+        {
+            return await context.Tenants
+                .FirstOrDefaultAsync(t => t.Email == email);
+        }
+
         public async Task CreateAsync(Tenant tenant)
         {
             await context.Tenants.AddAsync(tenant);

@@ -14,6 +14,8 @@ namespace ApartmentBook.MVC.Features.Apartments.Repositories
         {
             return await context.Apartments
                 .Include(a => a.Tenant)
+                .Include(a => a.User)
+                .Include(a => a.Payments)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 

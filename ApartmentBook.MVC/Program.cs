@@ -2,14 +2,17 @@ using ApartmentBook.MVC.Data;
 using ApartmentBook.MVC.Features.Apartments.Repositories;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
-using ApartmentBook.MVC.Features.Emails;
+using ApartmentBook.MVC.Features.Emails.Services;
 using ApartmentBook.MVC.Features.Payments.Repositories;
 using ApartmentBook.MVC.Features.Payments.Services;
 using ApartmentBook.MVC.Features.Tenants.Repositories;
 using ApartmentBook.MVC.Features.Tenants.Services;
+using FluentEmail.Core;
+using FluentEmail.Razor;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SendGrid.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -28,6 +31,15 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+builder.WebHost
+    .UseUrls(builder.Configuration["IpAddress:Address"])
+    .ConfigureKestrel(options =>
+    {
+        //options.Listen(System.Net.IPAddress.Parse("192.168.68.102"), 7262);
+        options.Listen(System.Net.IPAddress
+            .Parse(builder.Configuration["IpAddress:Address"]), int.Parse(builder.Configuration["IpAddress:Port"]));
+    });
+
 // Logger
 builder.Logging.ClearProviders();
 ILogger logger = new LoggerConfiguration()
@@ -36,6 +48,9 @@ ILogger logger = new LoggerConfiguration()
 
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton(logger);
+
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console());
 
 // Automapper
 builder.Services.AddAutoMapper(typeof(Program));
@@ -53,6 +68,7 @@ builder.Services.AddTransient<ITenantService, TenantService>();
 // SendGrid
 builder.Services.AddTransient<IEmailSender, EmailService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+
 var sendGridKey = builder.Configuration["SendGrid:Key"];
 
 builder.Services.AddSendGrid(options =>
@@ -64,6 +80,13 @@ builder.Services
     .AddFluentEmail(builder.Configuration["SendGrid:Email"])
     .AddRazorRenderer()
     .AddSendGridSender(sendGridKey);
+
+JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
+{
+    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+};
+
+Email.DefaultRenderer = new RazorRenderer();
 
 var app = builder.Build();
 
@@ -87,12 +110,26 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    // https://www.hanselman.com/blog/publishing-an-aspnet-core-website-to-a-cheap-linux-vm-host
+    var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("hosting.json", optional: true)
+            .Build();
+
+    var host = new WebHostBuilder()
+        .UseKestrel()
+        .UseConfiguration(config)
+        .UseContentRoot(Directory.GetCurrentDirectory())
+        .UseStartup<Program>()
+        .Build();
+
+    host.Run();
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
