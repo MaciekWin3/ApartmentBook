@@ -191,8 +191,8 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             var data = await paymentService.GetChartData(DateTime.Now, id);
             List<object> iData = new();
             DataTable dt = new();
-            dt.Columns.Add("Label", System.Type.GetType("System.String"));
-            dt.Columns.Add("Value", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("Label", Type.GetType("System.String"));
+            dt.Columns.Add("Value", Type.GetType("System.Int32"));
             foreach (var item in data)
             {
                 DataRow dr = dt.NewRow();

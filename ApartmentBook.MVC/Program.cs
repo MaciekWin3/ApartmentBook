@@ -31,14 +31,14 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.WebHost
-    .UseUrls(builder.Configuration["IpAddress:Address"])
-    .ConfigureKestrel(options =>
-    {
-        //options.Listen(System.Net.IPAddress.Parse("192.168.68.102"), 7262);
-        options.Listen(System.Net.IPAddress
-            .Parse(builder.Configuration["IpAddress:Address"]), int.Parse(builder.Configuration["IpAddress:Port"]));
-    });
+//builder.WebHost
+//    .UseUrls(builder.Configuration["IpAddress:Address"])
+//    .ConfigureKestrel(options =>
+//    {
+//        //options.Listen(System.Net.IPAddress.Parse("192.168.68.102"), 7262);
+//        options.Listen(System.Net.IPAddress
+//            .Parse(builder.Configuration["IpAddress:Address"]), int.Parse(builder.Configuration["IpAddress:Port"]));
+//    });
 
 // Logger
 builder.Logging.ClearProviders();
@@ -129,7 +129,7 @@ else
     app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
