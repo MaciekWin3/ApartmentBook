@@ -49,7 +49,7 @@ ILogger logger = new LoggerConfiguration()
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton(logger);
 
-builder.Host.UseSerilog((ctx, lc) => lc
+builder.Host.UseSerilog((_, lc) => lc
     .WriteTo.Console());
 
 // Automapper

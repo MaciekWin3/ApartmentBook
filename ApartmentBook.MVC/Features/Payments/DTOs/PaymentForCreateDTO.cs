@@ -16,8 +16,8 @@ namespace ApartmentBook.MVC.Features.Payments.DTOs
         public int PaymentYear { get; set; }
         public Guid UserId { get; set; }
 
-        // Apartment Data
-        public Guid ApartmentId { get; set; }
+        // Apartment Data | was Guid
+        public string ApartmentId { get; set; }
 
         public string ApartmentName { get; set; }
     }

@@ -57,10 +57,14 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         public async Task<IActionResult> Create(Guid apartmentId)
         {
             var apartment = await apartmentService.GetAsync(apartmentId);
+            if (apartment is null)
+            {
+                // TODO: Something
+                return NotFound();
+            }
             var paymentForCreateDTO = new PaymentForCreateDTO
             {
-                ApartmentId = apartment is null ? Guid.Empty : apartment.Id,
-                ApartmentName = apartment?.Name
+                ApartmentId = apartment?.Id.ToString() ?? string.Empty,
             };
             return View(paymentForCreateDTO);
         }
@@ -70,7 +74,7 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Guid apartmentId, [FromForm] PaymentForCreateDTO paymentForCreateDTO)
+        public async Task<IActionResult> Create(PaymentForCreateDTO paymentForCreateDTO)
         {
             Payment payment = new();
             if (ModelState.IsValid)
@@ -78,11 +82,11 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
                 payment = mapper.Map<PaymentForCreateDTO, Payment>(paymentForCreateDTO);
                 payment.Id = Guid.NewGuid();
                 payment.User = await GetUser();
-                payment.Apartment = await apartmentService.GetAsync(apartmentId);
+                payment.Apartment = await apartmentService.GetAsync(Guid.Parse(paymentForCreateDTO.ApartmentId));
                 await paymentService.CreateAsync(payment);
-                return RedirectToAction("Details", "Apartments", new { id = apartmentId });
+                return RedirectToAction("Details", "Apartments", new { id = paymentForCreateDTO.ApartmentId });
             }
-            return View(mapper.Map<PaymentDTO>(payment));
+            return View(mapper.Map<PaymentForCreateDTO>(payment));
         }
 
         // GET: Payments/Edit/5
