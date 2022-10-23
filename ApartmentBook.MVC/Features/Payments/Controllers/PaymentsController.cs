@@ -1,5 +1,4 @@
-﻿using ApartmentBook.MVC.Features.Apartments.Models;
-using ApartmentBook.MVC.Features.Apartments.Services;
+﻿using ApartmentBook.MVC.Features.Apartments.Services;
 using ApartmentBook.MVC.Features.Auth.Models;
 using ApartmentBook.MVC.Features.Payments.DTOs;
 using ApartmentBook.MVC.Features.Payments.Models;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace ApartmentBook.MVC.Features.Payments.Controllers
 {
@@ -56,16 +54,14 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         }
 
         // GET: Payments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(Guid apartmentId)
         {
-            var apartment = JsonConvert.DeserializeObject<Apartment>(TempData["Apartament"].ToString());
-            TempData.Keep("Apartament");
+            var apartment = await apartmentService.GetAsync(apartmentId);
             var paymentForCreateDTO = new PaymentForCreateDTO
             {
-                ApartmentId = apartment.Id,
-                ApartmentName = apartment.Name
+                ApartmentId = apartment is null ? Guid.Empty : apartment.Id,
+                ApartmentName = apartment?.Name
             };
-            TempData["ID"] = apartment.Id;
             return View(paymentForCreateDTO);
         }
 
@@ -74,9 +70,8 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] PaymentForCreateDTO paymentForCreateDTO)
+        public async Task<IActionResult> Create(Guid apartmentId, [FromForm] PaymentForCreateDTO paymentForCreateDTO)
         {
-            var apartmentId = Guid.Parse(TempData["ID"].ToString());
             Payment payment = new();
             if (ModelState.IsValid)
             {

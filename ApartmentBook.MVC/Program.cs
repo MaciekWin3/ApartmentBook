@@ -31,14 +31,14 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-//builder.WebHost
-//    .UseUrls(builder.Configuration["IpAddress:Address"])
-//    .ConfigureKestrel(options =>
-//    {
-//        //options.Listen(System.Net.IPAddress.Parse("192.168.68.102"), 7262);
-//        options.Listen(System.Net.IPAddress
-//            .Parse(builder.Configuration["IpAddress:Address"]), int.Parse(builder.Configuration["IpAddress:Port"]));
-//    });
+/*builder.WebHost
+    .UseUrls(builder.Configuration["IpAddress:Address"])
+    .ConfigureKestrel(options =>
+    {
+        //options.Listen(System.Net.IPAddress.Parse("192.168.68.103"), 7262);
+        options.Listen(System.Net.IPAddress
+            .Parse(builder.Configuration["IpAddress:Address"]), int.Parse(builder.Configuration["IpAddress:Port"]));
+    });*/
 
 // Logger
 builder.Logging.ClearProviders();
@@ -110,20 +110,6 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    // https://www.hanselman.com/blog/publishing-an-aspnet-core-website-to-a-cheap-linux-vm-host
-    var config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("hosting.json", optional: true)
-            .Build();
-
-    var host = new WebHostBuilder()
-        .UseKestrel()
-        .UseConfiguration(config)
-        .UseContentRoot(Directory.GetCurrentDirectory())
-        .UseStartup<Program>()
-        .Build();
-
-    host.Run();
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();

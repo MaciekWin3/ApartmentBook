@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Data;
 
 namespace ApartmentBook.MVC.Features.Apartments.Controllers
@@ -210,11 +209,9 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
             return Json(iData);
         }
 
-        public async Task<IActionResult> RedirectToCreatePayment(Guid id)
+        public IActionResult RedirectToCreatePayment(Guid id)
         {
-            TempData["Apartament"] = JsonConvert.SerializeObject(await apartmentService.GetAsync(id));
-            TempData.Keep("Apartament");
-            return RedirectToAction("Create", "Payments");
+            return RedirectToAction("Create", "Payments", new { apartmentId = id });
         }
 
         private async Task<ApplicationUser> GetUser()
