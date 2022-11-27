@@ -50,13 +50,14 @@ namespace ApartmentBook.MVC.Features.Emails.Services
                 .UsingTemplateFromFile(messageTemplatePath, new PaymentReminderEmail
                 {
                     Name = "<Your Name>",
-                    Payments = new List<Payment>() {
-                new Payment()
-                {
-                    Amount = 2
-                }
-                }
-                }); ;
+                    Payments = new List<Payment>()
+                    {
+                        new Payment()
+                        {
+                            Amount = 2
+                        }
+                    }
+                });
 
             var sendGridSender = new SendGridSender(apiKey);
             SendResponse response = sendGridSender.Send(fluentEmail);

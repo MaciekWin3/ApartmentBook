@@ -59,8 +59,7 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
             var apartment = await apartmentService.GetAsync(apartmentId);
             if (apartment is null)
             {
-                // TODO: Something
-                return NotFound();
+                return View(new PaymentForCreateDTO { });
             }
             var paymentForCreateDTO = new PaymentForCreateDTO
             {

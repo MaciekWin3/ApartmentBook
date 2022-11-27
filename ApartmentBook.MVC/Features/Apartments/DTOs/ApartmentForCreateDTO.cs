@@ -2,7 +2,7 @@
 
 namespace ApartmentBook.MVC.Features.Apartments.DTOs
 {
-    public class ApartmentForCreateDTO
+    public record ApartmentForCreateDTO
     {
         public string Name { get; set; }
         public string Street { get; set; }

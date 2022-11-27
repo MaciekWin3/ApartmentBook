@@ -2,7 +2,7 @@
 
 namespace ApartmentBook.MVC.Features.Payments.DTOs
 {
-    public class PaymentDTO
+    public record PaymentDTO
     {
         public Guid Id { get; set; }
         public PaymentType Type { get; set; }

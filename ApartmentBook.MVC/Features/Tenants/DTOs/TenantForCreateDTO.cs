@@ -1,6 +1,6 @@
 ﻿namespace ApartmentBook.MVC.Features.Tenants.DTOs
 {
-    public class TenantForCreateDTO
+    public record TenantForCreateDTO
     {
         public string FirstName { get; set; }
         public string Surname { get; set; }

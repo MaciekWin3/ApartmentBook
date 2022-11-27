@@ -184,7 +184,7 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> NewChart(Guid id)
+        public async Task<JsonResult> GetChartData(Guid id)
         {
             Console.WriteLine(id);
             var data = await paymentService.GetChartData(DateTime.Now, id);

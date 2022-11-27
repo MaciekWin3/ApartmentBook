@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApartmentBook.MVC.Features.Payments.DTOs
 {
-    public class PaymentForCreateDTO
+    public record PaymentForCreateDTO
     {
         [DataType(DataType.Currency)]
         public decimal Amount { get; set; }

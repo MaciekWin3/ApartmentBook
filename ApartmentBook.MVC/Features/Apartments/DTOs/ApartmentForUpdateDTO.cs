@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApartmentBook.MVC.Features.Apartments.DTOs
 {
-    public class ApartmentForUpdateDTO
+    public record ApartmentForUpdateDTO
     {
         public string Name { get; set; }
         public string Country { get; set; }
