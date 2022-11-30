@@ -15,7 +15,6 @@ namespace ApartmentBook.MVC.Tests.Features.Apartments.Services
             apartmentRepositoryMock = new Mock<IApartmentRepository>();
         }
 
-        // To fix
         [Test]
         public async Task ShouldReturnApartment()
         {

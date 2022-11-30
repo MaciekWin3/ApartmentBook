@@ -6,11 +6,8 @@ namespace ApartmentBook.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            this.logger = logger;
         }
 
         public IActionResult Index()
