@@ -60,7 +60,7 @@ namespace ApartmentBook.MVC.Features.Emails.Services
                 });
 
             var sendGridSender = new SendGridSender(apiKey);
-            SendResponse response = sendGridSender.Send(fluentEmail);
+            SendResponse response = await sendGridSender.SendAsync(fluentEmail);
 
             if (!response.Successful)
             {

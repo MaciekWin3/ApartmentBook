@@ -378,6 +378,6 @@ FodyWeavers.xsd
 **/.idea/**/contentModel.xml
 **/.idea/**/modules.xml
 
-# Settings
+# Settings, you need to add them manualy
 appsettings.json
 appsettings.Development.json

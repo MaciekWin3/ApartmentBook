@@ -184,10 +184,10 @@ namespace ApartmentBook.MVC.Features.Apartments.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetChartData(Guid id)
+        public JsonResult GetChartData(Guid id)
         {
             Console.WriteLine(id);
-            var data = await paymentService.GetChartData(DateTime.Now, id);
+            var data = paymentService.GetChartData(DateTime.Now, id);
             List<object> iData = new();
             DataTable dt = new();
             dt.Columns.Add("Label", Type.GetType("System.String"));

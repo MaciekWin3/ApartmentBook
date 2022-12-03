@@ -57,7 +57,7 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
+        public IDictionary<PaymentType, decimal> GetChartData(DateTime date, Guid apartmentId)
         {
             // Needs refactor to raw sql
             return context.Payments

@@ -18,6 +18,6 @@ namespace ApartmentBook.MVC.Features.Payments.Repositories
 
         Task UpdateAsync(Payment payment);
 
-        Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId);
+        IDictionary<PaymentType, decimal> GetChartData(DateTime date, Guid apartmentId);
     }
 }

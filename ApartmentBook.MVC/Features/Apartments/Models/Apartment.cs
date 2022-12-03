@@ -26,6 +26,5 @@ namespace ApartmentBook.MVC.Features.Apartments.Models
         public virtual IList<Payment> Payments { get; set; }
         public virtual IList<Tenant> Tenant { get; set; }
         public string TenantEmail { get; set; }
-        //public IList<string> Notes { get; set; }
     }
 }

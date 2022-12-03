@@ -63,9 +63,9 @@ namespace ApartmentBook.MVC.Features.Payments.Services
             return apartment.Id;
         }
 
-        public async Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId)
+        public IDictionary<PaymentType, decimal> GetChartData(DateTime date, Guid apartmentId)
         {
-            return await paymentRepository.GetChartData(date, apartmentId);
+            return paymentRepository.GetChartData(date, apartmentId);
         }
 
         public async Task<string> GenerateCsvPaymentSummary(CsvPaymetsType type, string userId = null, Guid? apartmentId = null)

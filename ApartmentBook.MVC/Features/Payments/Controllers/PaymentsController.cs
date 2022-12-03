@@ -56,9 +56,12 @@ namespace ApartmentBook.MVC.Features.Payments.Controllers
         // GET: Payments/Create
         public async Task<IActionResult> Create(Guid apartmentId)
         {
+            var user = await GetUser();
             var apartment = await apartmentService.GetAsync(apartmentId);
             if (apartment is null)
             {
+                var apartments = await apartmentService.GetUsersApartments(user.Id);
+                ViewData["Apartments"] = apartments.Select(a => a.Name).ToList();
                 return View(new PaymentForCreateDTO { });
             }
             var paymentForCreateDTO = new PaymentForCreateDTO

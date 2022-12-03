@@ -3,10 +3,10 @@
 
 @{
     ViewData["Title"] = "Create";
+    var apartments = ViewData["Apartments"] as List<string>;
 }
 
 <h1>Create payment</h1>
-
 <h4>@Model.ApartmentName</h4>
 <hr />
 <div class="row">
@@ -14,8 +14,21 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group" hidden="@(Model.ApartmentId is not null)">
-                <label asp-for="ApartmentId" class="control-label"></label>
-                <input asp-for="ApartmentId" class="form-control" value="@Model.ApartmentId">
+                @if (apartments is not null && apartments.Count() > 0)
+                {
+                    <label asp-for="ApartmentName" class="control-label"></label>
+                    <select asp-for="ApartmentName" class="form-control">
+                    @foreach (var apartment in apartments)
+                    {
+                        <option value="@apartment">@apartment</option>
+                    }
+                    </select>
+                }
+                else
+                {
+                    <label asp-for="ApartmentId" class="control-label"></label>
+                    <input asp-for="ApartmentId" class="form-control" value="@Model.ApartmentId">
+                }
             </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
@@ -32,7 +45,7 @@
                 <select asp-for="PaymentMonth" class="form-control">
                     @foreach (Month month in Enum.GetValues(typeof(Month)))
                     {
-                        @if((int)month == (int)DateTime.Now.Month)
+                        @if((int)month == DateTime.Now.Month)
                         {
                             <option selected="selected" value="@month">@month</option>
                         }

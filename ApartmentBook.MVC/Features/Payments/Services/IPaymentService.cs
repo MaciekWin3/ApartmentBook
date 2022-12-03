@@ -18,6 +18,6 @@ namespace ApartmentBook.MVC.Features.Payments.Services
 
         Task<Guid> PayPaymentAndReturnApartmentId(Guid id);
 
-        Task<IDictionary<PaymentType, decimal>> GetChartData(DateTime date, Guid apartmentId);
+        IDictionary<PaymentType, decimal> GetChartData(DateTime date, Guid apartmentId);
     }
 }
