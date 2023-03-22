@@ -2,6 +2,7 @@
 using ApartmentBook.MVC.Features.Apartments.Repositories;
 using ApartmentBook.MVC.Features.Apartments.Services;
 using Moq;
+using NUnit.Framework;
 
 namespace ApartmentBook.MVC.Tests.Features.Apartments.Services
 {
